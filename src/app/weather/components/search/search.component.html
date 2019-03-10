@@ -1,11 +1,11 @@
-<form class="form-inline mb-5">
+<form class="form-inline mb-5" [formGroup]="searchFormGroup">
   <div class="form-group col-8 pl-0">
-    <input class="form-control mt-3 col"
-           id="city"
-           name="city"
-           placeholder="City"
-           type="text"
-           required>
+    <input class="form-control mt-3 col" id="city" name="city" 
+           formControlName="city" placeholder="City" type="text"
+           required [ngClass]="{ 'is-invalid': submitted && form.city.errors }">
+      <div *ngIf="submitted && form.city.errors" class="invalid-feedback">
+        <div *ngIf="form.city.errors.required">City is required</div>
+      </div>
   </div>
   <button class="btn-search btn btn-primary mt-3 col-4" type="submit" (click)="search()">Search</button>
 </form>

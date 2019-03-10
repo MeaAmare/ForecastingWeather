@@ -1,15 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html'
 })
 export class SearchComponent {
-  // IMPLEMENT ANY INPUT OR OUTPUT YOU MIGHT NEED
+  public searchFormGroup: FormGroup;
+  public submitted: boolean = false;
 
-  constructor() { }
+  @Input()
+  public set value(city: string) {
 
-  search() {
-    // TO BE IMPLEMENTED
+    if (!this.searchFormGroup) {
+      return;
+    }
+
+    this.searchFormGroup.patchValue({
+      city
+    });
+  }
+
+  @Output()
+  public onSearch: EventEmitter<string> = new EventEmitter(null);
+
+  constructor(
+    private formBuilder: FormBuilder
+  ) { }
+
+  public ngOnInit(): void {
+    this.searchFormGroup = this.formBuilder.group({
+      city: [null, [Validators.required]]
+    });
+  }
+
+  get form() { return this.searchFormGroup.controls; }
+
+  public search(): void {
+    this.submitted = true;
+    if (this.searchFormGroup.invalid) {
+      return;
+    }
+    this.onSearch.emit(this.searchFormGroup.value.city);
   }
 }
